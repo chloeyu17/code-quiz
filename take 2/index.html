@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./style.css">
+        <title>Code Quiz</title>
+    </head>
+    <body>
+        <main>
+            <header class="jumbotron jumbotron-fluid jumbotron-custom">
+                <div class="container text-right">
+                    <p>Time: <span id="timer">0</span></p>
+                </div>
+                <div class="container text-center">
+                    <h1>Code Quiz</h1>
+                    <button class="m-2 btn btn-dark btn-lg" id="start-btn">Start</button>
+                </div>
+            </header>
+            <section class="container text-center" id="instructions">
+                <h1>Javascript Quiz</h1>
+                <h3>Try to answer these questions in 60 seconds or less</h3>
+                <p>
+                    If you answer incorrectly, you will lose 10 seconds off of the timer.
+                    If you answer a question correctly, you will gain ten points.
+                    At the end of quiz, submit your score to the scoreboard!
+                    <br><br> Click Start to begin!
+                </p>
+            </section>
+
+            <section class="container text-center hide" id="question-container">
+                <div id="question">Question</div>
+                <div id="answer-btns">
+                    <button type="button" class="btn">Answer 1</button>
+                    <button type="button" class="btn">Answer 2</button>
+                    <button type="button" class="btn">Answer 3</button>
+                    <button type="button" class="btn">Answer 4</button>
+                </div>
+            </section>
+
+            <section class="container text-center hide" id="quiz-complete">
+                <h2>Congratulations!</h2>
+                <span class="score">Your final score is <span id="correct-answers"></span></span>
+                <div>
+                    <form class="form-group">
+                        <label for="new-score">Name:</label>
+                        <input type="text" id="username">
+                        <button type="button" class="btn btn-success" id="submit-btn">Submit Score</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="container text-center my-4" id="highscores">
+                <h1>High Scores:</h1>
+                <div class="score-container">
+                    <ol id="score-list"></ol>
+                    <button type="button" class="btn btn-danger" id="clear-btn">Clear Scores</button>
+                </div>
+            </section>
+            
+        </main>
+    </body>
+    <script src="highscore.js"></script>
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+</html>

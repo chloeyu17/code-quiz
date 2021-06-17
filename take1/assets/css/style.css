@@ -38,6 +38,7 @@ header{
     background-color: var(--color3);
     color: var(--color1);
     border: var(--color5) dashed 3px;
+    display: none;
 }
 
 .card{
@@ -48,6 +49,7 @@ header{
     border: var(--color1) dotted 2px;
     display: flex;
     flex-direction: column;
+    display: none;
 }
 
 .question{
@@ -72,7 +74,8 @@ header{
     padding: var(--padding);
     margin: var(--margin);
     border: solid black 1px;
-    text-align: center;
+    text-align: left;
+    display: none;
 }
 
 .score{
@@ -82,4 +85,9 @@ header{
     background-color: var(--color5);
     color: var(--color1);
     border: var(--color4) solid 2px;
+    display: none;
+}
+
+#submit{
+    display: none;
 }

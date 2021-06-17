@@ -1,0 +1,22 @@
+:root{
+    --dblue: #242947;
+    --lblue: #626f95;
+    --yellow: #ebdab2;
+    --lorange: #eb986e;
+    --dorange: #c56c63;
+    --green: #87af70;
+}
+
+
+.jumbotron-custom{
+    background-color: var(--lblue);
+    color: black;
+}
+
+.dark-text{
+    color: black;
+}
+
+.hide{
+    display: none;
+}
