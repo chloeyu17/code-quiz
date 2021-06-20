@@ -29,7 +29,7 @@
                 </p>
             </section>
 
-            <section class="container text-center" id="question-container">
+            <section class="container text-center hide" id="question-container">
                 <div id="question">Question</div>
                 <div id="answer-btns">
                     <button type="button" class="btn">Answer 1</button>
@@ -38,7 +38,7 @@
                     <button type="button" class="btn">Answer 4</button>
                 </div>
                 <div>
-                    <button type = "button" id="next-btn" class="btn hide">Next</button>
+                    <button type = "button" id="next-btn" class="btn btn-dark hide">Next</button>
                 </div>
             </section>
 
@@ -46,10 +46,10 @@
                 <h2>Congratulations!</h2>
                 <span class="score">Your final score is <span id="correct-answers"></span></span>
                 <div>
-                    <form class="form-group">
+                    <form class="form-group" id="submit-btn">
                         <label for="new-score">Name:</label>
                         <input type="text" id="username">
-                        <button type="button" class="btn btn-success" id="submit-btn">Submit Score</button>
+                        <button type="submit" class="btn btn-success">Submit Score</button>
                     </form>
                 </div>
             </section>

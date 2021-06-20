@@ -1,20 +1,25 @@
 //Variable declaration
 var timerEl = document.getElementById('timer');
+var answerEl = document.getElementById('correct-answers')
 //Buttons
 const startBtn = document.getElementById('start-btn');
 const submitBtn = document.getElementById('submit-btn');
 const nextBtn = document.getElementById('next-btn');
+var clearBtn = document.getElementById('clear-btn');
+var scoreList = document.getElementById('score-list');
 //page sections
+const header = document.querySelector('header');
+const QandACont = document.getElementById('question-container');
 const questionCont = document.getElementById('question');
 const answerCont = document.getElementById('answer-btns');
-const submitScore = document.getElementById('submit-score');
-const instructionCont = document.getElementById('instructions');
 const compCont = document.getElementById('quiz-complete');
+const instructionCont = document.getElementById('instructions');
 const highscoreCont = document.getElementById('highscores');
 //Changing variables
 let timeRemaining = 60;
 let shuffledQuestions, unaskedQuestions, timeInterval, usernameInput;
 let correctAnswers = 0;
+let highscores = JSON.parse(localStorage.getItem("highscores")||"[]");
 
 //Event listeners to respond to button clicks
 startBtn.addEventListener("click", startQuiz);
@@ -24,8 +29,8 @@ nextBtn.addEventListener("click", function() {
     setQuestion();
 });
 
-submitBtn.addEventListener("click", function(event){
-    event.stopPropagation();
+submitBtn.addEventListener("submit", function(event){
+    event.preventDefault();
     addScore();
     displayHighscorePage();
 });
@@ -36,7 +41,7 @@ function startQuiz() {
     startBtn.classList.add("hide");
     instructionCont.classList.add("hide");
     highscoreCont.classList.add("hide");
-    questionCont.classList.remove("hide");
+    QandACont.classList.remove("hide");
 
     //shuffles questions
     shuffledQuestions = questions.sort(() => Math.random() - 0.5);
@@ -53,7 +58,7 @@ function timerStart(){
             timerEl.textContent = timeRemaining;
             timeRemaining --;
         } else {
-            gameOver();
+            quizOver();
         }
     }, 1000);
 }
@@ -64,7 +69,8 @@ function setQuestion() {
     showQuestion(shuffledQuestions[unaskedQuestions]);
 }
 
-//Displays questions from the js file in the html
+//Displays questions from the js file in the html by setting the content of the question container to the question
+//found in questions.js and the answer buttons' content to the corresponding answers.  The correctness of the question is also added in the if statement
 function showQuestion(question) {
     questionCont.innerHTML = question.question;
 
@@ -80,38 +86,90 @@ function showQuestion(question) {
     });
 }
 
+//Hides the next button after it is clicked, removes the previous buttons to be replaced with new buttons for the new question
 function resetState() {
     nextBtn.classList.add('hide');
+    clearClassStatus(header);
     while(answerCont.firstChild){
         answerCont.removeChild(answerCont.firstChild)
     }
 }
 
+//When an answer is selected, the correctness of the answer is compared to the value of correct assigned to the selected answer in the showQuestion function
+//The header will change color and the points and time will be affected accordingly.
 function selectAnswer(event){
     var selectedBtn = event.target;
     var correct = selectedBtn.dataset.correct;
+    setClassStatus(header, correct);
     if(!correct){
         timeRemaining -= 10;
     } else {
         correctAnswers +=10;
     }
     Array.from(answerCont.children).forEach((newAnsBtn) => {
-        setStatusClass(newAnsBtn, newAnsBtn.dataset.correct);
+        setClassStatus(newAnsBtn, newAnsBtn.dataset.correct);
     });
-    if(shuffledQuestions.length > currentQuestionIndex + 1){
-        setNextQuestion();
+
+    //If there are remaining questions in the array, the function calls the next question.  Otherwise, the game finishes.
+    if(shuffledQuestions.length > unaskedQuestions + 1){
+        nextBtn.classList.remove('hide');
     } else {
-        gameOver();
+        quizOver(timeInterval);
     }
+}
+
+function setClassStatus(header, correct){
+    clearClassStatus(header);
+    if(correct){
+        header.classList.add('correct');
+    } else {
+        header.classList.add('incorrect');
+    }
+}
+
+function clearClassStatus(header){
+    header.classList.remove('correct');
+    header.classList.remove('incorrect');
+}
+
+function quizOver(timeInterval){
+    questionCont.classList.add('hide');
+    compCont.classList.remove('hide');
+    clearInterval(timeInterval);
+    answerEl.textContent = correctAnswers;
 }
     
 var addScore = function(){
-    console.log("addScore");
+    usernameInput = document.getElementById('username').value.trim();
+    var newScore = {
+        name: usernameInput,
+        score: correctAnswers
+    };
+    highscores.push(newScore);
+    localStorage.setItem("highscores", JSON.stringify(highscores));
 }
 
 var displayHighscorePage = function(){
-    console.log("displayPage");
-    
     highscoreCont.classList.remove("hide");
-    
+    postScores();
 }
+
+//Sort the scores from high to low
+highscores.sort(function(a, b){
+    return b.score - a.score;
+});
+
+//Display Scores
+function postScores(){
+    for (var i = 0; i<highscores.length; i++){
+        var scoreEntry = document.createElement("li");
+        scoreEntry.textContent = highscores[i].name + ": " + highscores[i].score;
+        scoreList.appendChild(scoreEntry);
+    }
+}
+
+//Click handlers for clearing scoreboard
+clearBtn.addEventListener("click", function() {
+    localStorage.clear();
+    window.location.reload();
+});

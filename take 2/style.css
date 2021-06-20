@@ -20,3 +20,11 @@
 .hide{
     display: none;
 }
+
+.correct{
+    background-color: var(--green);
+}
+
+.incorrect{
+    background-color: var(--dorange);
+}
