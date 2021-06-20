@@ -2,10 +2,11 @@
 var timerEl = document.getElementById('timer');
 //Buttons
 const startBtn = document.getElementById('start-btn');
-const answerBtn = document.getElementById('answer-btns');
 const submitBtn = document.getElementById('submit-btn');
+const nextBtn = document.getElementById('next-btn');
 //page sections
-const questionCont = document.getElementById('question-container');
+const questionCont = document.getElementById('question');
+const answerCont = document.getElementById('answer-btns');
 const submitScore = document.getElementById('submit-score');
 const instructionCont = document.getElementById('instructions');
 const compCont = document.getElementById('quiz-complete');
@@ -18,10 +19,10 @@ let correctAnswers = 0;
 //Event listeners to respond to button clicks
 startBtn.addEventListener("click", startQuiz);
 
-// answerBtn.addEventListener("click", function() {
-//     unaskedQuestions++;
-//     setQuestion();
-// });
+nextBtn.addEventListener("click", function() {
+    unaskedQuestions++;
+    setQuestion();
+});
 
 submitBtn.addEventListener("click", function(event){
     event.stopPropagation();
@@ -59,26 +60,31 @@ function timerStart(){
 
 //Set Question sets the next question after a question has been answered
 function setQuestion() {
- console.log("setQuestion");
- showQuestion(shuffledQuestions[unaskedQuestions]);
+    resetState();
+    showQuestion(shuffledQuestions[unaskedQuestions]);
 }
 
 //Displays questions from the js file in the html
 function showQuestion(question) {
     questionCont.innerHTML = question.question;
+
     question.answers.forEach((answer) => {
-        var newAnsBtn = document.createElement("button");
+        const newAnsBtn = document.createElement("button");
         newAnsBtn.innerHTML = answer.text;
-        newAnsBtn.classList.add("btn");
-        answerBtn.classList.remove("hide");
+        newAnsBtn.classList.add("button");
         if(answer.correct){
             newAnsBtn.dataset.correct = answer.correct;
         }
         newAnsBtn.addEventListener("click", selectAnswer);
-        answerBtn.appendChild(newAnsBtn);
-
-  
+        answerCont.appendChild(newAnsBtn); 
     });
+}
+
+function resetState() {
+    nextBtn.classList.add('hide');
+    while(answerCont.firstChild){
+        answerCont.removeChild(answerCont.firstChild)
+    }
 }
 
 function selectAnswer(event){
@@ -89,7 +95,7 @@ function selectAnswer(event){
     } else {
         correctAnswers +=10;
     }
-    Array.from(answerBtn.children).forEach((newAnsBtn) => {
+    Array.from(answerCont.children).forEach((newAnsBtn) => {
         setStatusClass(newAnsBtn, newAnsBtn.dataset.correct);
     });
     if(shuffledQuestions.length > currentQuestionIndex + 1){
@@ -105,5 +111,7 @@ var addScore = function(){
 
 var displayHighscorePage = function(){
     console.log("displayPage");
+    
+    highscoreCont.classList.remove("hide");
     
 }
