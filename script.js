@@ -1,6 +1,8 @@
 //Variable declaration
 var timerEl = document.getElementById('timer');
-var answerEl = document.getElementById('correct-answers')
+var answerEl = document.getElementById('correct-answers');
+var scoreEl = document.getElementById('score');
+
 //Buttons
 const startBtn = document.getElementById('start-btn');
 const submitBtn = document.getElementById('submit-btn');
@@ -16,9 +18,7 @@ const compCont = document.getElementById('quiz-complete');
 const instructionCont = document.getElementById('instructions');
 const highscoreCont = document.getElementById('highscores');
 //Changing variables
-let timeRemaining = 60;
-let shuffledQuestions, unaskedQuestions, timeInterval, usernameInput;
-let correctAnswers = 0;
+let shuffledQuestions, unaskedQuestions, usernameInput, timeRemaining, correctAnswers;
 let highscores = JSON.parse(localStorage.getItem("highscores")||"[]");
 
 //Event listeners to respond to button clicks
@@ -33,6 +33,7 @@ submitBtn.addEventListener("submit", function(event){
     event.preventDefault();
     addScore();
     displayHighscorePage();
+    compCont.classList.add("hide");
 });
 
 //Start Quiz replaces the high scores section with a quiz section containing questions and answers
@@ -42,7 +43,11 @@ function startQuiz() {
     instructionCont.classList.add("hide");
     highscoreCont.classList.add("hide");
     QandACont.classList.remove("hide");
+    compCont.classList.add("hide");
 
+    //set variable values
+    timeRemaining = 60;
+    correctAnswers = 0;
     //shuffles questions
     shuffledQuestions = questions.sort(() => Math.random() - 0.5);
     unaskedQuestions = 0;
@@ -106,6 +111,7 @@ function selectAnswer(event){
     } else {
         correctAnswers +=10;
     }
+    score.textContent = correctAnswers;
     Array.from(answerCont.children).forEach((newAnsBtn) => {
         setClassStatus(newAnsBtn, newAnsBtn.dataset.correct);
     });
@@ -114,10 +120,11 @@ function selectAnswer(event){
     if(shuffledQuestions.length > unaskedQuestions + 1){
         nextBtn.classList.remove('hide');
     } else {
-        quizOver(timeInterval);
+        quizOver();
     }
 }
 
+//sets the header to either green or red depending on which answer is selected
 function setClassStatus(header, correct){
     clearClassStatus(header);
     if(correct){
@@ -127,15 +134,17 @@ function setClassStatus(header, correct){
     }
 }
 
+//resets the header to a blue background
 function clearClassStatus(header){
     header.classList.remove('correct');
     header.classList.remove('incorrect');
 }
 
-function quizOver(timeInterval){
-    questionCont.classList.add('hide');
+//when the quiz is over, we want to hide the question container and show the completed container, which prompts the user to fill out the form
+function quizOver(){
+    QandACont.classList.add('hide');
     compCont.classList.remove('hide');
-    clearInterval(timeInterval);
+    timeRemaining == 0;
     answerEl.textContent = correctAnswers;
 }
     
@@ -152,6 +161,7 @@ var addScore = function(){
 var displayHighscorePage = function(){
     highscoreCont.classList.remove("hide");
     postScores();
+    startBtn.classList.remove("hide");
 }
 
 //Sort the scores from high to low
